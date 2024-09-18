@@ -5,6 +5,7 @@
 ----
 ## Prerequisite
 You should have an EKS cluster that is up and running. Ensure that the AWS CLI, Helm, eksctl, and kubectl are installed on your system. Then, configure the AWS CLI with your access and secret keys.
+
 ### Install AwsCli
 ```
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -65,7 +66,7 @@ Update the version of the newly created Addon
 eksctl update addon --name aws-ebs-csi-driver --version v1.34.0-eksbuild.1 --cluster Cluster-Name \
 --service-account-role-arn arn:aws:iam::654654515587:role/AmazonEKS_EBS_CSI_DriverRole --force
 ```
-Now add the Help repo of Prometheus
+Now add the Helm repo of Prometheus
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
@@ -81,9 +82,35 @@ helm upgrade -i prometheus prometheus-community/prometheus \
 ```
 kubectl patch pvc storage-prometheus-alertmanager-0 -n prometheus --type='merge' -p '{"spec": {"storageClassName": "ebs-gp2"}}'
 ```
-To access the Prometheus
+To access the Prometheus, run the following command. It will open the Prometheus server on your localhost:9090
 ```
-kubectl port-forward prometheus-server-dd484f8d9-j8pxl -n prometheus 9090
+kubectl port-forward prometheus-server-dd484f8d9-j8pxl -n prometheus 9090:9090
 ```
 
+## Deploy Grafana
 
+Add the Helm repo of Grafana
+```
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+```
+Deploy the Grafana with the following command.
+```
+kubectl create namespace grafana
+helm install grafana grafana/grafana \
+    --namespace grafana \
+    --set persistence.storageClassName="gp2" \
+    --set persistence.enabled=true \
+    --set adminPassword='EKS!sAWSome' \
+    --values ./grafana.yaml
+```
+To Access the Grafana, run the following command. It will open the Grafana server on your localhost:8080
+```
+kubectl port-forward grafana-dd484f8d9-j8pxl -n prometheus 80:8080
+```
+
+## Delete Prometheus and Grafana
+```
+helm delete prometheus -n prometheus
+helm delete grafana -n grafana
+```
