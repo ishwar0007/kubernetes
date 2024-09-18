@@ -37,6 +37,10 @@ kubectl version --client
 ```
 eksctl utils associate-iam-oidc-provider --cluster Cluster-Name --approve
 ```
+## Configure EKS cluster
+```
+aws eks --region ap-south-1 update-kubeconfig --name Cluster-Name
+```
 ## Deploy Prometheus
 First, we need to configure the ebs-csi-controller so that Prometheus can use EBS (Elastic Block Storage) for data storage.
 ```
