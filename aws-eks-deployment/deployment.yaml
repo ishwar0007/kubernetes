@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: fastapi
+  name: deployment-fastapi
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: app-fastapi
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: app-fastapi
+    spec:
+      terminationGracePeriodSeconds: 180
+      containers:
+      - image: 12345678.dkr.ecr.ap-south-1.amazonaws.com/fastapi:latest
+        imagePullPolicy: Always
+        env:
+        - name: aws_access_key
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret-fastapi
+              key: Access
+        - name: aws_secret_key
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret-fastapi
+              key: Secret
+        - name: aws_secret_name
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret-fastapi
+              key: Secret_Manager
+        name: app-fastapi
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            memory: 2048Mi
+            cpu: 512m
+          requests:
+            memory: 1024Mi
+            cpu: 256m

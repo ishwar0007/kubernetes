@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$1$2"
+spec:
+  rules:
+  - host: "kube.linuxhunter.in"
+    http:
+      paths:
+      - pathType: Prefix
+        path: /?(.*)
+        backend:
+          service:
+            name: wordpress-service
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /phpmyadmin(/|$)(.*)
+        backend:
+          service:
+            name: phpmyadmin-service
+            port:
+              number: 80
