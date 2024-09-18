@@ -83,6 +83,12 @@ helm upgrade -i prometheus prometheus-community/prometheus \
 --set alertmanager.persistentVolume.storageClass="gp2",server.persistentVolume.storageClass="gp2"
 ```
 *** Note: In some cases, the Alertmanager or server PVC may get stuck in a pending state and fail to connect to the storage class. To resolve this, use the command below to fix the PVC for Alertmanager. ***
+
+To check the PVC
+```
+kubectl get pvc -n prometheus
+```
+Fix the PVC issue 
 ```
 kubectl patch pvc storage-prometheus-alertmanager-0 -n prometheus --type='merge' -p '{"spec": {"storageClassName": "gp2"}}'
 ```
