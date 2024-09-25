@@ -116,7 +116,7 @@ helm install grafana grafana/grafana \
 ```
 To Access the Grafana, run the following command. It will open the Grafana server on your localhost:8080
 ```
-kubectl port-forward grafana-dd484f8d9-j8pxl -n prometheus 80:8080
+kubectl port-forward grafana-dd484f8d9-j8pxl -n grafana 80:8080
 ```
 
 ## Delete Prometheus and Grafana
