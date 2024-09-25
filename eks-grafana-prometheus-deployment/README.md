@@ -114,9 +114,9 @@ helm install grafana grafana/grafana \
     --set adminPassword='EKS!sAWSome' \
     --values ./grafana.yaml
 ```
-To Access the Grafana, run the following command. It will open the Grafana server on your localhost:8080
+To Access the Grafana, run the following command. It will open the Grafana server on your localhost:8080. 
 ```
-kubectl port-forward grafana-dd484f8d9-j8pxl -n grafana 80:8080
+kubectl port-forward grafana-7c45568c54-vlfqg -n grafana 8080:3000
 ```
 
 ## Delete Prometheus and Grafana
